@@ -8,12 +8,15 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      urls: []
+      urls: [],
+      error: ''
     }
   }
 
   initializeURLs = () => {
-    getUrls().then(data => this.setState({urls: data.urls}))
+    getUrls()
+    .then(data => this.setState({urls: data.urls}))
+    .catch(() => this.setState({ error: 'Something went wrong' }))
   }
 
   submitNewURL = (title, longUrl) => {
@@ -40,8 +43,9 @@ export class App extends Component {
           <h1>URL Shortener</h1>
           <UrlForm submitNewURL={this.submitNewURL}/>
         </header>
-
-        <UrlContainer urls={this.state.urls}/>
+        {this.state.error && <h2>{this.state.error}</h2>} 
+        {!this.state.error && <UrlContainer urls={this.state.urls}/>}
+        
       </main>
     );
   }
