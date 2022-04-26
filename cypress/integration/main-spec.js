@@ -51,4 +51,13 @@ describe('main', () => {
         .should('contain', 'http://localhost:3001/useshorturl/2')
         .should('contain', 'https://example.com/a-new-url/10345886-985663')
     })
+    it('As a user, If I try to submit without filling out both input fields I should see an error message', () => {
+        cy.intercept('GET', 'http://localhost:3001/api/v1/urls', {
+            status: 200,
+            fixture: 'first-get'
+        }).as('First Stub')
+        cy.visit("http://localhost:3000")
+        .get('button').click()
+        .get('p[class="error"]').should('contain', 'Please fill out both inputs before submitting').should('be.visible')
+    })
 })
