@@ -33,7 +33,7 @@ class UrlForm extends Component {
   render() {
     return (
       <>
-      {this.state.errorMessage && <p>{this.state.errorMessage}</p>}
+      {this.state.errorMessage && <p className='error'>{this.state.errorMessage}</p>}
       <form>
         <input
           type='text'
