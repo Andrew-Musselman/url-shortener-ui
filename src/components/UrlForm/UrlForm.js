@@ -16,7 +16,9 @@ class UrlForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.props.submitNewURL(this.state.title, this.state.urlToShorten)
+    if(this.state.title && this.state.urlToShorten) {
+      this.props.submitNewURL(this.state.title, this.state.urlToShorten)
+    }
     this.clearInputs();
   }
 
