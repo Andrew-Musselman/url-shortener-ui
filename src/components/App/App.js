@@ -16,10 +16,10 @@ export class App extends Component {
     getUrls().then(data => this.setState({urls: data.urls}))
   }
 
-  submitNewURL = (something, something_else) => {
+  submitNewURL = (title, longUrl) => {
     let body = {
-      title: something,
-      long_url: something_else
+      title: title,
+      long_url: longUrl
     }
     fetch('http://localhost:3001/api/v1/urls', {
       method: 'POST',
