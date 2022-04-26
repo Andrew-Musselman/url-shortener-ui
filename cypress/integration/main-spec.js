@@ -19,7 +19,7 @@ describe('main', () => {
         cy.visit("http://localhost:3000")
         .get('input[name="title"]').should('have.attr', 'placeholder', 'Title...').should('be.visible')
         .get('input[name="urlToShorten"]').should('have.attr', 'placeholder', 'URL to Shorten...').should('be.visible')
-        .get('button').should('be.visible')
+        .get('button').should('contain', 'Shorten Please!').should('be.visible')
     })
     it('As a user, as I type in the input fields they should hold the value of what I type', () => {
         cy.intercept('GET', 'http://localhost:3001/api/v1/urls', {
@@ -29,5 +29,26 @@ describe('main', () => {
         cy.visit("http://localhost:3000")
         .get('input[name="title"]').type('New URL').should('have.value', 'New URL')
         .get('input[name="urlToShorten"]').type('https://example.com/a-new-url/10345886-985663').should('have.value', 'https://example.com/a-new-url/10345886-985663')
+    })
+    it('As a user, when I click the submit button it should post the new URL', () => {
+        cy.visit("http://localhost:3000")
+        .intercept('POST', 'http://localhost:3001/api/v1/urls', {
+            status: 201,
+            body: {
+                title: 'New URL',
+                long_url: 'https://example.com/a-new-url/10345886-985663'
+            }
+        }).as('Post')
+        .intercept('GET', 'http://localhost:3001/api/v1/urls', {
+            status: 200, 
+            fixture: 'second-get'
+        }).as('second stub')
+        .get('input[name="title"]').type('New URL')
+        .get('input[name="urlToShorten"]').type('https://example.com/a-new-url/10345886-985663')
+        .get('button').click()
+        .get('div[class="url"]').last().should('be.visible')
+        .should('contain', 'New URL')
+        .should('contain', 'http://localhost:3001/useshorturl/2')
+        .should('contain', 'https://example.com/a-new-url/10345886-985663')
     })
 })
