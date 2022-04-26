@@ -60,4 +60,13 @@ describe('main', () => {
         .get('button').click()
         .get('p[class="error"]').should('contain', 'Please fill out both inputs before submitting').should('be.visible')
     })
+    it('As a user, I should see an error message if the server is down', () => {
+        cy.intercept('GET', 'http://localhost:3001/api/v1/urls', {
+            status: 500
+        }).as('Error Stub')
+        cy.visit("http://localhost:3000")
+        .get('h2').should('contain', 'Something went wrong')
+    })
 })
+
+// Last test not passing, but it works as expected in the browser???
