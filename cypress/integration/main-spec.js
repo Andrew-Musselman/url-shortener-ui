@@ -11,4 +11,13 @@ describe('main', () => {
         .get('a').should('contain', 'http://localhost:3001/useshorturl/1').should('be.visible')
         .get('p').should('contain', 'https://images.unsplash.com/photo-1531898418865-480b7090470f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=934&q=80').should('be.visible')
     })
+    it('As a user, when I visit the page I should see an input form', () => {
+        cy.intercept('GET', 'http://localhost:3001/api/v1/urls', {
+            status: 200,
+            fixture: 'first-get'
+        }).as('First Stub')
+        .get('input[name="title"]').should('have.attr', 'placeholder', 'Title...').should('be.visible')
+        .get('input[name="urlToShorten"]').should('have.attr', 'placeholder', 'URL to Shorten...').should('be.visible')
+        .get('button').should('be.visible')
+    })
 })
